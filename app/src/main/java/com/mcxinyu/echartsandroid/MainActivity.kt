@@ -1,8 +1,13 @@
 package com.mcxinyu.echartsandroid
 
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.webkit.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleOwner
 import com.mcxinyu.echartsandroid.databinding.ActivityMainBinding
+import kotlin.math.log
 
 /**
  *
@@ -11,11 +16,13 @@ import com.mcxinyu.echartsandroid.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val option = """
+        binding.echarts.setOption(option)
+    }
+
+    val option = """
                     {
                       xAxis: {
                         type: 'value',
@@ -106,6 +113,4 @@ class MainActivity : AppCompatActivity() {
                       ]
                     }
                 """.trimIndent()
-        binding.echarts.setOption(option)
-    }
 }
