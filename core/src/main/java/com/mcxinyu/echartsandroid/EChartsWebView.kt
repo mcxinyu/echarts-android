@@ -5,8 +5,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import java.io.BufferedReader
-import java.io.InputStreamReader
 
 /**
  *
