@@ -17,6 +17,9 @@
 ## 使用
 发布在 [Jitpack echarts-android](https://jitpack.io/#mcxinyu/echarts-android)，简单配置即可使用。
 
+## 文档
+doing
+
 ## 优点
 - 没有繁琐的对象映射
 - 配置灵活，无需写一堆面向对象的对象
