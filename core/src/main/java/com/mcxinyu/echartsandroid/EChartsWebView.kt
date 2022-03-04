@@ -2,12 +2,11 @@ package com.mcxinyu.echartsandroid
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.AssetManager
-import android.graphics.Bitmap
 import android.util.AttributeSet
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.webkit.internal.AssetHelper
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 /**
  *
@@ -20,14 +19,17 @@ open class EChartsWebView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : WebView(context, attrs, defStyleAttr) {
 
-    init {
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        initSetting()
+    }
+
+    private fun initSetting() {
         val settings = settings
         settings.javaScriptEnabled = true
         settings.javaScriptCanOpenWindowsAutomatically = true
         settings.setSupportZoom(true)
         settings.displayZoomControls = true
-
-        loadUrl("file:///android_asset/index.html")
 
         webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
@@ -35,16 +37,18 @@ open class EChartsWebView @JvmOverloads constructor(
                 runnable?.run()
             }
         }
+
+        loadUrl("file:///android_asset/index.html")
     }
 
     private var runnable: Runnable? = Runnable { runnable = null }
 
     public fun setOption(option: String) {
         if (runnable == null) {
-            evaluateJavascript("javascript:setOption($option)", null)
+            evaluateJavascript("javascript:myChart.setOption($option, true)", null)
         } else {
             runnable = Runnable {
-                evaluateJavascript("javascript:setOption($option)", null)
+                evaluateJavascript("javascript:myChart.setOption($option, true)", null)
                 runnable = null
             }
         }
