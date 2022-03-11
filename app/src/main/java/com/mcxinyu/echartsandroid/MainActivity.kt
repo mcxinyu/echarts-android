@@ -1,5 +1,6 @@
 package com.mcxinyu.echartsandroid
 
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,7 @@ import android.webkit.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleOwner
 import com.mcxinyu.echartsandroid.databinding.ActivityMainBinding
+import org.intellij.lang.annotations.Language
 import kotlin.math.log
 
 /**
@@ -19,98 +21,37 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+//        binding.echarts.setBackgroundColor(Color.parseColor("#00000000"))
         binding.echarts.setOption(option)
     }
 
+    @Language("js")
     val option = """
-                    {
-                      xAxis: {
-                        type: 'value',
-                        show: false
-                      },
-                      yAxis: {
-                        type: 'category',
-                        boundaryGap: false,
-                        onZero: true,
-                        data: [
-                          '',
-                          '',
-                          '0:00',
-                          '1:00',
-                          '2:00',
-                          '3:00',
-                          '4:00',
-                          '5:00',
-                          '6:00',
-                          '7:00',
-                          '8:00',
-                          '9:00',
-                          '10:00',
-                          '11:00',
-                          '12:00',
-                          '13:00',
-                          '14:00',
-                          '15:00',
-                          '16:00',
-                          '17:00',
-                          '18:00',
-                          '19:00',
-                          '20:00',
-                          '21:00',
-                          '22:00',
-                          '23:00',
-                          '24:00',
-                          '',
-                          ''
-                        ]
-                      },
-                      dataZoom: [
-                        {
-                          show: false,
-                          start: 0,
-                          end: 100
-                        },
-                        {
-                          show: true,
-                          yAxisIndex: 0,
-                          filterMode: 'empty',
-                          width: 30,
-                          height: '80%',
-                          showDataShadow: false,
-                        }
-                      ],
-                      series: [
-                        {
-                          data: [
-                            0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                            0, 0, 1, 0, 0
-                          ],
-                          type: 'bar',
-                          showBackground: false,
-                          barCategoryGap: '0%',
-                          stack: 'total',
-                          itemStyle: {
-                            borderColor: 'transparent',
-                            color: ''
-                          }
-                        },
-                        {
-                          name: 'Placeholder',
-                          type: 'bar',
-                          stack: 'total',
-                          itemStyle: {
-                            borderColor: 'transparent',
-                            color: 'transparent'
-                          },
-                          emphasis: {
-                            itemStyle: {
-                              borderColor: 'transparent',
-                              color: 'transparent'
-                            }
-                          },
-                          data: [8]
-                        }
-                      ]
-                    }
-                """.trimIndent()
+            {
+              legend: {
+                orient: 'vertical',
+                right: 10,
+                top: 'middle',
+                selectedMode: false
+              },
+              series: [
+                {
+                  name: '设备在线情况',
+                  type: 'pie',
+                  startAngle: 45,
+                  label: {
+                    formatter: '{b}: {@value}'
+                  },
+                  labelLine: {
+                    length: 0
+                  },
+                  radius: '80%',
+                  data: [
+                    { value: 0, name: '离线' },
+                    { value: 5, name: '在线' },
+                  ]
+                }
+              ]
+            }
+    """.trimIndent()
 }
