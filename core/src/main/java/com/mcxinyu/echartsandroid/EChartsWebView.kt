@@ -23,11 +23,14 @@ open class EChartsWebView @JvmOverloads constructor(
     }
 
     private fun initSetting() {
-        val settings = settings
-        settings.javaScriptEnabled = true
-        settings.javaScriptCanOpenWindowsAutomatically = true
-        settings.setSupportZoom(true)
-        settings.displayZoomControls = true
+        kotlin.runCatching {
+            settings.apply {
+                javaScriptEnabled = true
+                javaScriptCanOpenWindowsAutomatically = true
+                setSupportZoom(true)
+                displayZoomControls = false
+            }
+        }
 
         webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
