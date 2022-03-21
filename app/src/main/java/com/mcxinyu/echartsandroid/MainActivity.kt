@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 //        binding.echarts.setBackgroundColor(Color.parseColor("#00000000"))
-        binding.echarts.setOption(option)
+        binding.echarts.option = option
     }
 
     @Language("js")
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
                 {
                   name: '设备在线情况',
                   type: 'pie',
-                  startAngle: 45,
+                  startAngle: 90,
                   label: {
                     formatter: '{b}: {@value}'
                   },
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
                   },
                   radius: '80%',
                   data: [
-                    { value: 0, name: '离线' },
+                    { value: 3, name: '离线' },
                     { value: 5, name: '在线' },
                   ]
                 }

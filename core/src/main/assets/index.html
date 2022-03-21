@@ -21,18 +21,18 @@
 <body>
 <div id="chart"></div>
 <script type="text/javascript">
-  var myChart = echarts.init(document.getElementById('chart'));
+  var chart = echarts.init(document.getElementById('chart'));
 
   function setOption(option) {
-    myChart.setOption(option, true)
+    chart.setOption(option, true)
   }
 
   function reset() {
-    myChart.reset()
+    chart.reset()
   }
 
   window.onresize = function () {
-    myChart.resize()
+    chart.resize()
   }
 </script>
 </body>

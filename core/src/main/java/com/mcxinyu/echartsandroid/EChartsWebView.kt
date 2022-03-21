@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.core.content.withStyledAttributes
 
 /**
  *
@@ -16,6 +17,27 @@ open class EChartsWebView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : WebView(context, attrs, defStyleAttr) {
+
+    private var runnable: Runnable? = Runnable { runnable = null }
+
+    var option: String? = null
+        set(value) {
+            field = value
+            if (runnable == null) {
+                evaluateJavascript("javascript:chart.setOption($field, true)", null)
+            } else {
+                runnable = Runnable {
+                    evaluateJavascript("javascript:chart.setOption($field, true)", null)
+                    runnable = null
+                }
+            }
+        }
+
+    init {
+        context.withStyledAttributes(attrs, R.styleable.EChartsWebView, defStyleAttr) {
+            option = getString(R.styleable.EChartsWebView_option)
+        }
+    }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -37,18 +59,5 @@ open class EChartsWebView @JvmOverloads constructor(
         }
 
         loadUrl("file:///android_asset/index.html")
-    }
-
-    private var runnable: Runnable? = Runnable { runnable = null }
-
-    public fun setOption(option: String) {
-        if (runnable == null) {
-            evaluateJavascript("javascript:myChart.setOption($option, true)", null)
-        } else {
-            runnable = Runnable {
-                evaluateJavascript("javascript:myChart.setOption($option, true)", null)
-                runnable = null
-            }
-        }
     }
 }
