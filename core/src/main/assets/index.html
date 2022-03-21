@@ -1,39 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0"/>
-    <style type="text/css">
-    body, html, div {
-      height: 100%;
-      width: 100%;
-      margin: 0;
-    }
-
-    div {
-      -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-    }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <style type="text/css">body, html, div {height: 100%;width: 100%;margin: 0;}div {-webkit-tap-highlight-color: rgba(255, 255, 255, 0);}</style>
   <script src="./js/echarts.min.js"></script>
 </head>
 <body>
 <div id="chart"></div>
 <script type="text/javascript">
   var chart = echarts.init(document.getElementById('chart'));
-
-  function setOption(option) {
-    chart.setOption(option, true)
-  }
-
-  function reset() {
-    chart.reset()
-  }
-
-  window.onresize = function () {
-    chart.resize()
-  }
+  window.onresize = function () { chart.resize() }
 </script>
 </body>
 </html>

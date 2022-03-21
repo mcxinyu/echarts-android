@@ -1,7 +1,7 @@
 
 buildscript {
     ext {
-        core_version = "2022.3.21.1126"
+        core_version = "2022.3.21.1720"
     }
 }
 

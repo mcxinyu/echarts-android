@@ -20,22 +20,11 @@ open class EChartsWebView @JvmOverloads constructor(
 
     private var runnable: Runnable? = Runnable { runnable = null }
 
-    var option: String? = null
-        set(value) {
-            field = value
-            if (runnable == null) {
-                evaluateJavascript("javascript:chart.setOption($field, true)", null)
-            } else {
-                runnable = Runnable {
-                    evaluateJavascript("javascript:chart.setOption($field, true)", null)
-                    runnable = null
-                }
-            }
-        }
-
     init {
         context.withStyledAttributes(attrs, R.styleable.EChartsWebView, defStyleAttr) {
-            option = getString(R.styleable.EChartsWebView_option)
+            getString(R.styleable.EChartsWebView_option)?.let {
+                setOption(it)
+            }
         }
     }
 
@@ -48,8 +37,6 @@ open class EChartsWebView @JvmOverloads constructor(
         kotlin.runCatching {
             settings.apply {
                 javaScriptEnabled = true
-                javaScriptCanOpenWindowsAutomatically = true
-                setSupportZoom(true)
                 displayZoomControls = false
             }
         }
@@ -62,5 +49,16 @@ open class EChartsWebView @JvmOverloads constructor(
         }
 
         loadUrl("file:///android_asset/index.html")
+    }
+
+    fun setOption(option: String?) {
+        if (runnable == null) {
+            evaluateJavascript("javascript:chart.setOption($option, true)", null)
+        } else {
+            runnable = Runnable {
+                evaluateJavascript("javascript:chart.setOption($option, true)", null)
+                runnable = null
+            }
+        }
     }
 }
