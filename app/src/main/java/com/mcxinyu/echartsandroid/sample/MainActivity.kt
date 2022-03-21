@@ -1,15 +1,9 @@
-package com.mcxinyu.echartsandroid
+package com.mcxinyu.echartsandroid.sample
 
-import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.webkit.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LifecycleOwner
-import com.mcxinyu.echartsandroid.databinding.ActivityMainBinding
+import com.mcxinyu.echartsandroid.sample.databinding.ActivityMainBinding
 import org.intellij.lang.annotations.Language
-import kotlin.math.log
 
 /**
  *
