@@ -41,7 +41,7 @@ afterEvaluate {
                 version = core_version
             }
         }
-//        repositories { mavenLocal() }
+        repositories { mavenLocal() }
     }
 }
 

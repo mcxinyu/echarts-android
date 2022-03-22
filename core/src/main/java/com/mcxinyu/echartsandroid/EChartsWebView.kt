@@ -23,7 +23,7 @@ open class EChartsWebView @JvmOverloads constructor(
     init {
         context.withStyledAttributes(attrs, R.styleable.EChartsWebView, defStyleAttr) {
             getString(R.styleable.EChartsWebView_option)?.let {
-                setOption(it)
+                option = it
             }
         }
     }
@@ -44,29 +44,33 @@ open class EChartsWebView @JvmOverloads constructor(
         webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                pending.invoke()
+                check {
+                    if (it) pending.invoke()
+                }
             }
         }
 
         loadUrl("file:///android_asset/index.html")
     }
 
-    fun check(block: (Boolean) -> Unit) {
+    fun check(onResult: (Boolean) -> Unit) {
         evaluateJavascript("javascript:chart.getWidth()") {
-            block.invoke("null" == (it ?: "null"))
+            onResult.invoke("null" == (it ?: "null"))
         }
     }
 
-    fun setOption(option: String?) {
-        kotlin.runCatching {
-            pending = {
-                evaluateJavascript("javascript:chart.setOption($option, true)", null)
-            }
-            check {
-                if (it) {
-                    pending.invoke()
+    var option: String? = null
+        set(value) {
+            field = value
+            field?.let {
+                kotlin.runCatching {
+                    pending = {
+                        evaluateJavascript("javascript:chart.setOption($it, true)", null)
+                    }
+                    check {
+                        if (it) pending.invoke()
+                    }
                 }
             }
         }
-    }
 }
