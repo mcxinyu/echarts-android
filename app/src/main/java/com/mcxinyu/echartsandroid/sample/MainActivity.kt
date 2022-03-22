@@ -16,6 +16,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.m = option
+
+        binding.echarts.check {
+            println(it)
+        }
     }
 
     @Language("js")

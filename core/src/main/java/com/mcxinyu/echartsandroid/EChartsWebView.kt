@@ -18,7 +18,7 @@ open class EChartsWebView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : WebView(context, attrs, defStyleAttr) {
 
-    private var runnable: Runnable? = Runnable { runnable = null }
+    private var pending: () -> Unit = {}
 
     init {
         context.withStyledAttributes(attrs, R.styleable.EChartsWebView, defStyleAttr) {
@@ -44,20 +44,28 @@ open class EChartsWebView @JvmOverloads constructor(
         webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                runnable?.run()
+                pending.invoke()
             }
         }
 
         loadUrl("file:///android_asset/index.html")
     }
 
+    fun check(block: (Boolean) -> Unit) {
+        evaluateJavascript("javascript:chart.getWidth()") {
+            block.invoke("null" == (it ?: "null"))
+        }
+    }
+
     fun setOption(option: String?) {
-        if (runnable == null) {
-            evaluateJavascript("javascript:chart.setOption($option, true)", null)
-        } else {
-            runnable = Runnable {
+        kotlin.runCatching {
+            pending = {
                 evaluateJavascript("javascript:chart.setOption($option, true)", null)
-                runnable = null
+            }
+            check {
+                if (it) {
+                    pending.invoke()
+                }
             }
         }
     }

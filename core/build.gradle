@@ -36,11 +36,12 @@ afterEvaluate {
         publications {
             release(MavenPublication) {
                 from components.release
-                groupId = 'com.mcxinyu'
-                artifactId = 'echartsandroid'
+                groupId = 'com.github.mcxinyu'
+                artifactId = 'echarts-android'
                 version = core_version
             }
         }
+//        repositories { mavenLocal() }
     }
 }
 
