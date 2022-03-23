@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.cli.jvm.main
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -27,6 +28,14 @@ android {
             )
         }
     }
+    sourceSets {
+        getByName("debug") {
+            kotlin.srcDir("src/main/java")
+        }
+        getByName("release") {
+            kotlin.srcDir("src/main/java")
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -43,10 +52,12 @@ afterEvaluate {
             create<MavenPublication>("maven") {
                 groupId = "com.github.mcxinyu"
                 artifactId = "echarts-android"
+
                 val time = SimpleDateFormat("yyyyMMddHHmm").format(Date())
                 val snapshot =
                     if ("true" == rootProject.extra["maven_local"]) "-$time-SNAPSHOT" else ""
                 version = rootProject.extra["core_version"] as String + snapshot
+
                 from(components["release"])
 
                 println("$artifactId version $version")
