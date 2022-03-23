@@ -55,7 +55,7 @@ open class EChartsWebView @JvmOverloads constructor(
 
     fun check(onResult: (Boolean) -> Unit) {
         evaluateJavascript("javascript:chart.getWidth()") {
-            onResult.invoke("null" == (it ?: "null"))
+            onResult.invoke("null" != (it ?: "null"))
         }
     }
 

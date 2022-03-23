@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "echarts-android"
-include ':app'
-include ':core'
+include(":app")
+include(":core")
