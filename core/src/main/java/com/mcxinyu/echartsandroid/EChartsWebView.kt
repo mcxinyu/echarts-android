@@ -61,14 +61,16 @@ open class EChartsWebView @JvmOverloads constructor(
 
     var option: String? = null
         set(value) {
-            field = value
-            field?.let {
-                kotlin.runCatching {
-                    pending = {
-                        evaluateJavascript("javascript:chart.setOption($it, true)", null)
-                    }
-                    check {
-                        if (it) pending.invoke()
+            if (field != value) {
+                field = value
+                field?.let {
+                    kotlin.runCatching {
+                        pending = {
+                            evaluateJavascript("javascript:chart.setOption($it, true)", null)
+                        }
+                        check {
+                            if (it) pending.invoke()
+                        }
                     }
                 }
             }

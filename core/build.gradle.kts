@@ -1,3 +1,6 @@
+import java.text.SimpleDateFormat
+import java.util.Date
+
 plugins {
     id("com.android.library")
     kotlin("android")
@@ -40,10 +43,13 @@ afterEvaluate {
             create<MavenPublication>("maven") {
                 groupId = "com.github.mcxinyu"
                 artifactId = "echarts-android"
-                val snapshot = if ("true" == rootProject.extra["maven_local"]) "-SNAPSHOT" else ""
+                val time = SimpleDateFormat("yyyyMMddHHmm").format(Date())
+                val snapshot =
+                    if ("true" == rootProject.extra["maven_local"]) "-$time-SNAPSHOT" else ""
                 version = rootProject.extra["core_version"] as String + snapshot
-
                 from(components["release"])
+
+                println("$artifactId version $version")
             }
         }
     }
