@@ -59,7 +59,7 @@ afterEvaluate {
 
 dependencies {
     compileOnly("androidx.core:core-ktx:1.7.0")
-    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.4.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.2")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")

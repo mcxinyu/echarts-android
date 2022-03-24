@@ -57,23 +57,9 @@ class MainActivity : AppCompatActivity() {
           title: {
             text: 'Accumulated Waterfall Chart'
           },
-//          tooltip: {
-//            trigger: 'axis',
-//            axisPointer: {
-//              type: 'shadow'
-//            },
-//            formatter: function (params) {
-//              let tar;
-//              if (params[1].value !== '-') {
-//                tar = params[1];
-//              } else {
-//                tar = params[0];
-//              }
-//              return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
-//            }
-//          },
           legend: {
-            data: ['Expenses', 'Income']
+            data: ['Expenses', 'Income'],
+            top: 24
           },
           grid: {
             left: '3%',
