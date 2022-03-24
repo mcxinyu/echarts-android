@@ -18,7 +18,8 @@
 发布在 [Jitpack echarts-android](https://jitpack.io/#mcxinyu/echarts-android)，简单配置即可使用。
 
 ## 文档
-doing
+- doing
+- 在此之前，请查看[项目样例](/app/src/main/java/com/mcxinyu/echartsandroid/sample/MainActivity.kt)，代码是最好的老师
 
 ## 优点
 - 没有繁琐的对象映射
