@@ -46,7 +46,6 @@ open class EChartsWebView @JvmOverloads constructor(
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 launch {
-//                    val withContext = withContext(Dispatchers.IO) { check() }
                     if (check()) {
                         pending.invoke()
                     }
@@ -85,7 +84,6 @@ open class EChartsWebView @JvmOverloads constructor(
                             evaluateJavascript("javascript:chart.setOption($it, true)", null)
                         }
                         launch {
-//                            val withContext = withContext(Dispatchers.IO) { check() }
                             if (check()) {
                                 pending.invoke()
                             }
