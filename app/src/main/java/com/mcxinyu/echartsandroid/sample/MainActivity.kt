@@ -1,8 +1,14 @@
 package com.mcxinyu.echartsandroid.sample
 
 import android.os.Bundle
+import android.widget.Toast
+import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
+import com.mcxinyu.echartsandroid.JavaScriptInterface
+import com.mcxinyu.echartsandroid.addJavascriptInterface
+import com.mcxinyu.echartsandroid.evaluateJavascript
 import com.mcxinyu.echartsandroid.sample.databinding.ActivityMainBinding
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.intellij.lang.annotations.Language
 
 /**
@@ -17,192 +23,115 @@ class MainActivity : AppCompatActivity() {
 
         binding.m = option
 
-        binding.echarts.check {
-            println(it)
-        }
+        interactWithJs(binding)
+    }
+
+    private fun interactWithJs(binding: ActivityMainBinding) {
+        binding.echarts.addJavascriptInterface(JavaScriptInterface("Messenger") {
+            runOnUiThread {
+                Toast.makeText(this, it ?: "just-call-on-message", Toast.LENGTH_SHORT).show()
+            }
+
+            null
+        })
+        binding.echarts.postDelayed({
+            binding.echarts.check {
+                binding.echarts.evaluateJavascript(
+                    """javascript:
+                // Messenger.postMessage(chart.getWidth());
+                chart.on('click', 'series', (params) => {
+                    Messenger.postMessage(JSON.stringify({
+                      type: 'showToast',
+                      payload: params.data,
+                    }));
+                });
+            """.trimIndent(), null
+                )
+            }
+        }, 1000)
     }
 
     @Language("js")
     val option = """
+        {
+          title: {
+            text: 'Accumulated Waterfall Chart'
+          },
+//          tooltip: {
+//            trigger: 'axis',
+//            axisPointer: {
+//              type: 'shadow'
+//            },
+//            formatter: function (params) {
+//              let tar;
+//              if (params[1].value !== '-') {
+//                tar = params[1];
+//              } else {
+//                tar = params[0];
+//              }
+//              return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
+//            }
+//          },
+          legend: {
+            data: ['Expenses', 'Income']
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'category',
+            data: (function () {
+              let list = [];
+              for (let i = 1; i <= 11; i++) {
+                list.push('Nov ' + i);
+              }
+              return list;
+            })()
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [
             {
-  color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
-  title: {
-    text: 'Gradient Stacked Area Chart'
-  },
-//   tooltip: {
-//    trigger: 'none',
-//    axisPointer: {
-//      type: 'cross'
-//    },
-//    extraCssText:'width:160px;height:40px;background:red;'
-//  },
-  legend: {
-    data: ['Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5']
-  },
-  toolbox: {
-    feature: {
-      saveAsImage: {}
-    }
-  },
-  grid: {
-    left: '3%',
-    right: '4%',
-    bottom: '3%',
-    containLabel: true
-  },
-  xAxis: [
-    {
-      type: 'category',
-      boundaryGap: false,
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    }
-  ],
-  yAxis: [
-    {
-      type: 'value'
-    }
-  ],
-  series: [
-    {
-      name: 'Line 1',
-      type: 'line',
-      stack: 'Total',
-      smooth: true,
-      lineStyle: {
-        width: 0
-      },
-      showSymbol: false,
-      areaStyle: {
-        opacity: 0.8,
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          {
-            offset: 0,
-            color: 'rgb(128, 255, 165)'
-          },
-          {
-            offset: 1,
-            color: 'rgb(1, 191, 236)'
-          }
-        ])
-      },
-      emphasis: {
-        focus: 'series'
-      },
-      data: [140, 232, 101, 264, 90, 340, 250]
-    },
-    {
-      name: 'Line 2',
-      type: 'line',
-      stack: 'Total',
-      smooth: true,
-      lineStyle: {
-        width: 0
-      },
-      showSymbol: false,
-      areaStyle: {
-        opacity: 0.8,
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          {
-            offset: 0,
-            color: 'rgb(0, 221, 255)'
-          },
-          {
-            offset: 1,
-            color: 'rgb(77, 119, 255)'
-          }
-        ])
-      },
-      emphasis: {
-        focus: 'series'
-      },
-      data: [120, 282, 111, 234, 220, 340, 310]
-    },
-    {
-      name: 'Line 3',
-      type: 'line',
-      stack: 'Total',
-      smooth: true,
-      lineStyle: {
-        width: 0
-      },
-      showSymbol: false,
-      areaStyle: {
-        opacity: 0.8,
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          {
-            offset: 0,
-            color: 'rgb(55, 162, 255)'
-          },
-          {
-            offset: 1,
-            color: 'rgb(116, 21, 219)'
-          }
-        ])
-      },
-      emphasis: {
-        focus: 'series'
-      },
-      data: [320, 132, 201, 334, 190, 130, 220]
-    },
-    {
-      name: 'Line 4',
-      type: 'line',
-      stack: 'Total',
-      smooth: true,
-      lineStyle: {
-        width: 0
-      },
-      showSymbol: false,
-      areaStyle: {
-        opacity: 0.8,
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          {
-            offset: 0,
-            color: 'rgb(255, 0, 135)'
-          },
-          {
-            offset: 1,
-            color: 'rgb(135, 0, 157)'
-          }
-        ])
-      },
-      emphasis: {
-        focus: 'series'
-      },
-      data: [220, 402, 231, 134, 190, 230, 120]
-    },
-    {
-      name: 'Line 5',
-      type: 'line',
-      stack: 'Total',
-      smooth: true,
-      lineStyle: {
-        width: 0
-      },
-      showSymbol: false,
-      label: {
-        show: true,
-        position: 'top'
-      },
-      areaStyle: {
-        opacity: 0.8,
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          {
-            offset: 0,
-            color: 'rgb(255, 191, 0)'
-          },
-          {
-            offset: 1,
-            color: 'rgb(224, 62, 76)'
-          }
-        ])
-      },
-      emphasis: {
-        focus: 'series'
-      },
-      data: [220, 302, 181, 234, 210, 290, 150]
-    }
-  ]
-}
+              name: 'Placeholder',
+              type: 'bar',
+              stack: 'Total',
+              itemStyle: {
+                borderColor: 'transparent',
+                color: 'transparent'
+              },
+              emphasis: {
+                itemStyle: {
+                  borderColor: 'transparent',
+                  color: 'transparent'
+                }
+              },
+              data: [0, 900, 1245, 1530, 1376, 1376, 1511, 1689, 1856, 1495, 1292]
+            },
+            {
+              name: 'Income',
+              type: 'bar',
+              stack: 'Total',
+              label: {
+                show: true,
+                position: 'top'
+              },
+              data: [900, 345, 393, '-', '-', 135, 178, 286, '-', '-', '-']
+            },
+            {
+              name: 'Expenses',
+              type: 'bar',
+              stack: 'Total',
+              label: {
+                show: true,
+                position: 'bottom'
+              },
+              data: ['-', '-', '-', 108, 154, '-', '-', '-', 119, 361, 203]
+            }
+          ]
+        }
     """.trimIndent()
 }

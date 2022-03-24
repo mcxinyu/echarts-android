@@ -1,7 +1,7 @@
 import java.util.*
 
 ext {
-    extra["core_version"] = "1.0.2"
+    extra["core_version"] = "1.0.3"
 
     Properties().apply {
         load(project.rootProject.file("local.properties").inputStream())

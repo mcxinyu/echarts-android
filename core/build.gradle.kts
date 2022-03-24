@@ -1,10 +1,9 @@
-import org.jetbrains.kotlin.cli.jvm.main
 import java.text.SimpleDateFormat
 import java.util.Date
 
 plugins {
     id("com.android.library")
-    kotlin("android")
+    id("org.jetbrains.kotlin.android")
     id("maven-publish")
 }
 
@@ -26,14 +25,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-        }
-    }
-    sourceSets {
-        getByName("debug") {
-            kotlin.srcDir("src/main/java")
-        }
-        getByName("release") {
-            kotlin.srcDir("src/main/java")
         }
     }
     compileOptions {
@@ -68,6 +59,8 @@ afterEvaluate {
 
 dependencies {
     compileOnly("androidx.core:core-ktx:1.7.0")
+    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.4.1")
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")

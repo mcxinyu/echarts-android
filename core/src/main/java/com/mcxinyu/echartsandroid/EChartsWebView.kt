@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.core.content.withStyledAttributes
+import kotlinx.coroutines.*
 
 /**
  *
@@ -16,7 +17,7 @@ open class EChartsWebView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : WebView(context, attrs, defStyleAttr) {
+) : WebView(context, attrs, defStyleAttr), CoroutineScope by MainScope() {
 
     private var pending: () -> Unit = {}
 
@@ -44,8 +45,11 @@ open class EChartsWebView @JvmOverloads constructor(
         webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                check {
-                    if (it) pending.invoke()
+                launch {
+//                    val withContext = withContext(Dispatchers.IO) { check() }
+                    if (check()) {
+                        pending.invoke()
+                    }
                 }
             }
         }
@@ -53,6 +57,18 @@ open class EChartsWebView @JvmOverloads constructor(
         loadUrl("file:///android_asset/index.html")
     }
 
+    /**
+     * 检查 chart 是否实例化成功
+     *
+     * @return Boolean
+     */
+    suspend fun check() = (evaluateJavascript("javascript:chart.getWidth()") ?: "null") != "null"
+
+    /**
+     * 检查 chart 是否实例化成功
+     *
+     * @param onResult Function1<Boolean, Unit>
+     */
     fun check(onResult: (Boolean) -> Unit) {
         evaluateJavascript("javascript:chart.getWidth()") {
             onResult.invoke("null" != (it ?: "null"))
@@ -68,11 +84,19 @@ open class EChartsWebView @JvmOverloads constructor(
                         pending = {
                             evaluateJavascript("javascript:chart.setOption($it, true)", null)
                         }
-                        check {
-                            if (it) pending.invoke()
+                        launch {
+//                            val withContext = withContext(Dispatchers.IO) { check() }
+                            if (check()) {
+                                pending.invoke()
+                            }
                         }
                     }
                 }
             }
         }
+
+    override fun onDetachedFromWindow() {
+        cancel()
+        super.onDetachedFromWindow()
+    }
 }
