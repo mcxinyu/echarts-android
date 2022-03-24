@@ -10,7 +10,7 @@
 
 ## 功能
 - [x] 支持 ECharts 基本功能
-- [ ] 支持 Android 与 JS 交互
+- [x] 支持 Android 与 JS 交互
 - [ ] 支持自由更换 ECharts 版本
 - [ ] 支持自由增加 ECharts 扩展
 
