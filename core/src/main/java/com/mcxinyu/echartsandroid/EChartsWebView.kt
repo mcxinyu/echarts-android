@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.core.content.withStyledAttributes
+import androidx.core.view.doOnDetach
 import kotlinx.coroutines.*
 
 /**
@@ -19,14 +19,13 @@ open class EChartsWebView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : WebView(context, attrs, defStyleAttr), CoroutineScope by MainScope() {
 
-    private var pending: () -> Unit = {}
-
     init {
         context.withStyledAttributes(attrs, R.styleable.EChartsWebView, defStyleAttr) {
             getString(R.styleable.EChartsWebView_option)?.let {
                 option = it
             }
         }
+        doOnDetach { cancel() }
     }
 
     override fun onSizeChanged(w: Int, h: Int, ow: Int, oh: Int) {
@@ -42,17 +41,6 @@ open class EChartsWebView @JvmOverloads constructor(
             }
         }
 
-        webViewClient = object : WebViewClient() {
-            override fun onPageFinished(view: WebView?, url: String?) {
-                super.onPageFinished(view, url)
-                launch {
-                    if (check()) {
-                        pending.invoke()
-                    }
-                }
-            }
-        }
-
         loadUrl("file:///android_asset/index.html")
     }
 
@@ -61,40 +49,30 @@ open class EChartsWebView @JvmOverloads constructor(
      *
      * @return Boolean
      */
-    suspend fun check() = (evaluateJavascript("javascript:chart.getWidth()") ?: "null") != "null"
+    suspend fun check() = "null" != evaluateJavascript("javascript:chart.getWidth()")
 
     /**
      * 检查 chart 是否实例化成功
      *
-     * @param onResult Function1<Boolean, Unit>
+     * @param onResult [@kotlin.ExtensionFunctionType] Function1<Boolean, Unit>
      */
-    fun check(onResult: (Boolean) -> Unit) {
+    fun check(onResult: Boolean.() -> Unit) =
         evaluateJavascript("javascript:chart.getWidth()") {
-            onResult.invoke("null" != (it ?: "null"))
+            onResult.invoke("null" != it)
         }
-    }
 
     var option: String? = null
         set(value) {
             if (field != value) {
                 field = value
                 field?.let {
-                    kotlin.runCatching {
-                        pending = {
-                            evaluateJavascript("javascript:chart.setOption($it, true)", null)
+                    launch {
+                        while (!check()) {
+                            delay(100)
                         }
-                        launch {
-                            if (check()) {
-                                pending.invoke()
-                            }
-                        }
+                        evaluateJavascript("javascript:chart.setOption($it, true)")
                     }
                 }
             }
         }
-
-    override fun onDetachedFromWindow() {
-        cancel()
-        super.onDetachedFromWindow()
-    }
 }

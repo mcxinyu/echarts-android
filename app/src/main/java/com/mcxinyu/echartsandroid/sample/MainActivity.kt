@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.mcxinyu.echartsandroid.JavaScriptInterface
 import com.mcxinyu.echartsandroid.addJavascriptInterface
 import com.mcxinyu.echartsandroid.evaluateJavascript
 import com.mcxinyu.echartsandroid.sample.databinding.ActivityMainBinding
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.intellij.lang.annotations.Language
 
@@ -27,17 +30,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun interactWithJs(binding: ActivityMainBinding) {
-        binding.echarts.addJavascriptInterface(JavaScriptInterface("Messenger") {
-            runOnUiThread {
-                Toast.makeText(this, it ?: "just-call-on-message", Toast.LENGTH_SHORT).show()
+        lifecycleScope.launch {
+            while (!binding.echarts.check()) {
+                delay(200)
             }
 
-            null
-        })
-        binding.echarts.postDelayed({
-            binding.echarts.check {
-                binding.echarts.evaluateJavascript(
-                    """javascript:
+            binding.echarts.addJavascriptInterface(JavaScriptInterface("Messenger") {
+                runOnUiThread {
+                    Toast.makeText(
+                        this@MainActivity,
+                        it ?: "just-call-on-message",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                null
+            })
+            binding.echarts.evaluateJavascript(
+                """javascript:
                 // Messenger.postMessage(chart.getWidth());
                 chart.on('click', 'series', (params) => {
                     Messenger.postMessage(JSON.stringify({
@@ -45,10 +55,9 @@ class MainActivity : AppCompatActivity() {
                       payload: params.data,
                     }));
                 });
-            """.trimIndent(), null
-                )
-            }
-        }, 1000)
+            """.trimIndent()
+            )
+        }
     }
 
     @Language("js")
