@@ -3,7 +3,7 @@
 
 基于 js 交互的方式实现的 [ECharts](https://github.com/apache/echarts) Android 项目。
 
-<img src="https://image2.njf2016.com/7df9defce8b9abb301a7bbd9823e7534.jpg" width="256"  alt="7df9defce8b9abb301a7bbd9823e7534"/>
+<img src="https://user-images.githubusercontent.com/9566116/160066496-52f45a12-1009-498c-b0a0-1f655ce39d90.jpg" width="256"  alt="7df9defce8b9abb301a7bbd9823e7534"/>
 
 ## 起源
 - 目前 Android 实现 [ECharts](https://github.com/apache/echarts) 的开源项目中，基本都是通过建立类似 ORM 的对象映射关系的实现。说真的这种实现方式既不灵活（例如后端下发参数配置后，前端还要再转一遍，其实已经是 h5 了，那直接 js 不就行了）；也无法做到快速更新 ECharts 版本。
