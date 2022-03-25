@@ -3,6 +3,8 @@
 
 基于 js 交互的方式实现的 [ECharts](https://github.com/apache/echarts) Android 项目。
 
+<img src="https://image2.njf2016.com/7df9defce8b9abb301a7bbd9823e7534.jpg" width="256"  alt="7df9defce8b9abb301a7bbd9823e7534"/>
+
 ## 起源
 - 目前 Android 实现 [ECharts](https://github.com/apache/echarts) 的开源项目中，基本都是通过建立类似 ORM 的对象映射关系的实现。说真的这种实现方式既不灵活（例如后端下发参数配置后，前端还要再转一遍，其实已经是 h5 了，那直接 js 不就行了）；也无法做到快速更新 ECharts 版本。
 - 我之前开发 flutter 项目的时候，使用过 [flutter_echarts](https://github.com/entronad/flutter_echarts)，他的实现思路就很好，我们也是通过后端直接下发 ECharts 配置信息（option参数），实现各端直接展示（例如 flutter、小程序、h5）。
