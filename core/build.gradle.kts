@@ -35,6 +35,7 @@ android {
         jvmTarget = "1.8"
         freeCompilerArgs = freeCompilerArgs + "-module-name=com.mcxinyu.echartsandroid"
     }
+    android.buildFeatures.dataBinding = true
 }
 
 afterEvaluate {
@@ -45,9 +46,8 @@ afterEvaluate {
                 artifactId = "echarts-android"
 
                 val time = SimpleDateFormat("yyyyMMddHHmm").format(Date())
-                val snapshot =
-                    if ("true" == rootProject.extra["maven_local"]) "-$time-SNAPSHOT" else ""
-                version = rootProject.extra["core_version"] as String + snapshot
+                version = if ("true" == rootProject.extra["maven_local"]) "1.0.0-$time-SNAPSHOT"
+                else rootProject.extra["core_version"] as String
 
                 from(components["release"])
 

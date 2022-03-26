@@ -5,7 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.webkit.WebView
 import androidx.core.content.withStyledAttributes
-import androidx.core.view.doOnDetach
+import com.mcxinyu.echartsandroid.webview.evaluateJavascript
 import kotlinx.coroutines.*
 
 /**
@@ -67,16 +67,23 @@ open class EChartsWebView @JvmOverloads constructor(
                 field?.let {
                     launch {
                         while (!check()) {
-                            delay(100)
+                            if (!isAttachedToWindow) {
+                                cancel()
+                            }
+                            withContext(Dispatchers.IO) {
+                                delay(100)
+                            }
                         }
-                        evaluateJavascript("javascript:chart.setOption($it, true)")
+                        if (isAttachedToWindow) {
+                            evaluateJavascript("javascript:chart.setOption($it, true)")
+                        }
                     }
+//                    if (context is LifecycleOwner) {
+//                        (context as LifecycleOwner).lifecycleScope.launch {
+//
+//                        }
+//                    }
                 }
             }
         }
-
-    override fun onDetachedFromWindow() {
-        cancel()
-        super.onDetachedFromWindow()
-    }
 }

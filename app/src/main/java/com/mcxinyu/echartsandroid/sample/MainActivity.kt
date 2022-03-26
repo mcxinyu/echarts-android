@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.mcxinyu.echartsandroid.JavaScriptInterface
-import com.mcxinyu.echartsandroid.addJavascriptInterface
-import com.mcxinyu.echartsandroid.evaluateJavascript
 import com.mcxinyu.echartsandroid.sample.databinding.ActivityMainBinding
+import com.mcxinyu.echartsandroid.webview.JavaScriptInterface
+import com.mcxinyu.echartsandroid.webview.addJavascriptInterface
+import com.mcxinyu.echartsandroid.webview.evaluateJavascript
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.intellij.lang.annotations.Language
 
 /**
@@ -38,7 +40,9 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             while (!binding.echarts.check()) {
-                delay(200)
+                withContext(Dispatchers.IO) {
+                    delay(200)
+                }
             }
 
             binding.echarts.evaluateJavascript(

@@ -1,4 +1,4 @@
-package com.mcxinyu.echartsandroid
+package com.mcxinyu.echartsandroid.webview
 
 import android.webkit.JavascriptInterface
 
