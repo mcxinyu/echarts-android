@@ -25,7 +25,6 @@ open class EChartsWebView @JvmOverloads constructor(
                 option = it
             }
         }
-        doOnDetach { cancel() }
     }
 
     override fun onSizeChanged(w: Int, h: Int, ow: Int, oh: Int) {
@@ -75,4 +74,9 @@ open class EChartsWebView @JvmOverloads constructor(
                 }
             }
         }
+
+    override fun onDetachedFromWindow() {
+        cancel()
+        super.onDetachedFromWindow()
+    }
 }
