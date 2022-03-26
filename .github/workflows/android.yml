@@ -29,6 +29,6 @@ jobs:
           method: 'GET'
           ignoreStatusCodes: 408
           preventFailureOnNoResponse: true
-          timeout: 180000
+          timeout: 600000
       - name: Show Response
         run: echo ${{ steps.JitPack.outputs.response }}
