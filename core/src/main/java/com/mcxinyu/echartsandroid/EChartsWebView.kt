@@ -25,11 +25,12 @@ open class EChartsWebView @JvmOverloads constructor(
                 option = it
             }
         }
+
+        initSetting()
     }
 
     override fun onSizeChanged(w: Int, h: Int, ow: Int, oh: Int) {
         super.onSizeChanged(w, h, ow, oh)
-        initSetting()
     }
 
     private fun initSetting() {
@@ -40,7 +41,9 @@ open class EChartsWebView @JvmOverloads constructor(
             }
         }
 
-        loadUrl("file:///android_asset/index.html")
+        post {
+            loadUrl("file:///android_asset/index.html")
+        }
     }
 
     /**
