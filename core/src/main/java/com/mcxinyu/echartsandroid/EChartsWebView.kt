@@ -78,11 +78,6 @@ open class EChartsWebView @JvmOverloads constructor(
                             evaluateJavascript("javascript:chart.setOption($it, true)")
                         }
                     }
-//                    if (context is LifecycleOwner) {
-//                        (context as LifecycleOwner).lifecycleScope.launch {
-//
-//                        }
-//                    }
                 }
             }
         }
