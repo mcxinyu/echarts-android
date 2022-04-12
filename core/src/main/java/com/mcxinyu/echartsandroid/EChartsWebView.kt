@@ -24,6 +24,7 @@ open class EChartsWebView @JvmOverloads constructor(
 
     /**
      * 空时使用默认实现，可以模仿本项目放置在 assets 中，也可以将文件放置在云端。
+     * 这里可以设置自己需要的 echarts 版本，详细参考 core/src/main/assets/index.html
      * [参考](https://echarts.apache.org/zh/api.html#echarts.init)
      */
     var initUrl: String = ""
@@ -47,7 +48,7 @@ open class EChartsWebView @JvmOverloads constructor(
     fun setInitScript(value: String, block: ((String) -> Unit)? = null) {
         if (initScript != value) {
             initScript = value
-            evaluateJavascript("javascript$initScript", block)
+            refresh(block)
         }
     }
 
@@ -55,24 +56,34 @@ open class EChartsWebView @JvmOverloads constructor(
      * 支持主题。让你的图表整体换个装，除了官方提供的主题之外，还可以定制你自己的主题。
      * [参考](https://echarts.apache.org/zh/download-extension.html)
      */
-    lateinit var themeScript: String
+    @Language("JavaScript")
+    var themeScript: String? = null
         private set
 
-    fun setThemeScript(value: String, block: ((String) -> Unit)? = null) {
+    /**
+     * 注册主题脚本后需要设置 [themeName] 生效
+     * @param value String
+     * @param block Function1<String, Unit>?
+     */
+    fun registerThemeScript(value: String, block: ((String) -> Unit)? = null) {
         if (themeScript != value) {
             themeScript = value
-            evaluateJavascript(
-                """javascript:
-                $jsChartName.dispose();
-                $jsChartName = echarts.init(
-                    document.getElementById('$h5ChartDomId'),
-                    $themeScript,
-                    $optsScript
-                );
-                $jsChartName.setOption($option, true);
-            """.trimIndent(),
-                block
-            )
+            runOnChecked { evaluateJavascript("javascript:$themeScript", block) }
+        }
+    }
+
+    var themeName: String? = null
+        private set
+
+    /**
+     * ECharts5 除了一贯的默认主题外，还内置了 'dark' 主题，所以 dark 无需注册主题脚本。
+     * @param value String
+     * @param block Function1<String, Unit>?
+     */
+    fun setThemeName(value: String, block: ((String) -> Unit)? = null) {
+        if (themeName != value) {
+            themeName = value
+            refresh(block)
         }
     }
 
@@ -80,21 +91,64 @@ open class EChartsWebView @JvmOverloads constructor(
      * 附加参数，本项目默认实现中 renderer 渲染模式默认采用 SVG。
      * [参考](https://echarts.apache.org/handbook/zh/best-practices/canvas-vs-svg/)
      */
+    @Language("JavaScript")
     lateinit var optsScript: String
         private set
+
+    fun setOptsScript(value: String, block: ((String) -> Unit)? = null) {
+        if (optsScript != value) {
+            optsScript = value
+            refresh(block)
+        }
+    }
 
     /**
      * 支持扩展s。各类 ECharts 扩展插件，获取更丰富的图表类型和增强功能。多个扩展用 \n 隔开
      * [参考](https://echarts.apache.org/zh/download-extension.html)
      */
-    private lateinit var extensionsScript: String
+    @Language("JavaScript")
+    var extensionsScript: String? = null
         private set
+
+    fun setExtensionsScript(value: String, block: ((String) -> Unit)? = null) {
+        if (extensionsScript != value) {
+            extensionsScript = value
+            refresh(block)
+        }
+    }
 
     /**
      * 附加脚本。可以在初始化完成后做些事，例如点击事件的初始化
      */
-    lateinit var moreScript: String
+    @Language("JavaScript")
+    var moreScript: String? = null
         private set
+
+    fun setMoreScript(value: String, block: ((String) -> Unit)? = null) {
+        if (moreScript != value) {
+            moreScript = value
+            refresh(block)
+        }
+    }
+
+    private fun refresh(block: ((String) -> Unit)? = null) {
+        runOnChecked {
+            evaluateJavascript(
+                """javascript:
+                    try {
+                      $jsChartName.dispose();
+                    } catch(e) {}
+                    $jsChartName = echarts.init(
+                        document.getElementById('$h5ChartDomId'),
+                        ${themeName?.let { "'$themeName'" }},
+                        $optsScript
+                    );
+                    $jsChartName.setOption($option, true);
+                """.trimIndent(),
+                block
+            )
+        }
+    }
 
     var jsChartName = "chart"
     var h5ChartDomId = "chart"
@@ -122,36 +176,42 @@ open class EChartsWebView @JvmOverloads constructor(
         context.withStyledAttributes(attrs, R.styleable.EChartsWebView, defStyleAttr) {
             val url = getString(R.styleable.EChartsWebView_initUrl) ?: "file:///android_asset/index.html"
 
-            themeScript = getString(R.styleable.EChartsWebView_themeScript) ?: "null"
+            themeScript = getString(R.styleable.EChartsWebView_themeScript)
+            themeName = getString(R.styleable.EChartsWebView_themeName)
             optsScript = getString(R.styleable.EChartsWebView_optsScript) ?: "{renderer: 'svg'}"
-            extensionsScript = getString(R.styleable.EChartsWebView_extensionsScript) ?: ""
-            moreScript = getString(R.styleable.EChartsWebView_moreScript) ?: ""
+            extensionsScript = getString(R.styleable.EChartsWebView_extensionsScript)
+            moreScript = getString(R.styleable.EChartsWebView_moreScript)
 
             option = getString(R.styleable.EChartsWebView_option)
 
             initScript = getString(R.styleable.EChartsWebView_initScript) ?: """javascript:
-                $extensionsScript
+                ${extensionsScript ?: ""}
+                ${themeScript ?: ""}
                 var $jsChartName = echarts.init(
                     document.getElementById('$h5ChartDomId'),
-                    $themeScript,
+                    ${themeName?.let { "'$themeName'" }},
                     $optsScript
                 );
-                $moreScript
+                ${moreScript ?: ""}
                 ${if (option == null) "" else "$jsChartName.setOption($option, true);"}
                 window.onresize = function() { $jsChartName.resize(); }
                 void(0);
                 """.trimIndent()
 
-            kotlin.runCatching {
-                settings.apply {
-                    javaScriptEnabled = true
-                    displayZoomControls = false
-                }
-                webViewClient = object : WebViewClient() {}
-            }
-
-            setInitUrl(url)
+            initEcharts(url)
         }
+    }
+
+    protected open fun initEcharts(url: String) {
+        kotlin.runCatching {
+            settings.apply {
+                javaScriptEnabled = true
+                displayZoomControls = false
+            }
+            webViewClient = object : WebViewClient() {}
+        }
+
+        setInitUrl(url)
     }
 
     override fun setWebViewClient(client: WebViewClient) {
@@ -159,10 +219,9 @@ open class EChartsWebView @JvmOverloads constructor(
             client,
             onPageFinished = object : (WebView?, String?) -> Unit {
                 override fun invoke(view: WebView?, url: String?) {
-                    // 初始化 echarts
                     evaluateJavascript(initScript, null)
                 }
-            },
+            }
         )
         super.setWebViewClient(inner)
     }

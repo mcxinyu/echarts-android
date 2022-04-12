@@ -13,8 +13,9 @@
 ## 功能
 - [x] 支持 ECharts 基本功能
 - [x] 支持 Android 与 JS 交互
-- [ ] 支持自由更换 ECharts 版本
-- [ ] 支持自由增加 ECharts 扩展
+- [x] 支持更换 ECharts 主题
+- [x] 支持更换 ECharts 版本
+- [x] 支持增加 ECharts 扩展
 
 ## 使用
 发布在 [Jitpack echarts-android](https://jitpack.io/#mcxinyu/echarts-android)，简单配置即可使用。

@@ -5,6 +5,7 @@
         <attr name="initScript" format="string" />
         <attr name="optsScript" format="string" />
         <attr name="themeScript" format="string" />
+        <attr name="themeName" format="string" />
         <attr name="extensionsScript" format="string" />
         <attr name="option" format="string" />
         <attr name="moreScript" format="string" />
