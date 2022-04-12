@@ -229,6 +229,9 @@ open class EChartsWebView @JvmOverloads constructor(
     fun runOnChecked(timeMillis: Long = 200, block: () -> Unit) {
         launch {
             while (!check()) {
+                if (!isAttachedToWindow) {
+                    cancel()
+                }
                 withContext(Dispatchers.IO) { delay(timeMillis) }
             }
 
