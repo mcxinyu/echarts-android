@@ -3,15 +3,10 @@ package com.mcxinyu.echartsandroid.sample
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
+import androidx.appcompat.app.AppCompatDelegate
 import com.mcxinyu.echartsandroid.sample.databinding.ActivityMainBinding
 import com.mcxinyu.echartsandroid.webview.JavaScriptInterface
 import com.mcxinyu.echartsandroid.webview.addJavascriptInterface
-import com.mcxinyu.echartsandroid.webview.evaluateJavascript
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.intellij.lang.annotations.Language
 
 /**
@@ -24,9 +19,20 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.switchView.setOnCheckedChangeListener { buttonView, isChecked ->
+            delegate.localNightMode =
+                if (isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+        }
+
         binding.m = option
 
-        interactWithJs(binding)
+//        interactWithJs(binding)
+
+        binding.echarts.postDelayed({
+//            binding.echarts.setThemeScript("'dark'") {
+//                interactWithJs(binding)
+//            }
+        }, 3000)
     }
 
     private fun interactWithJs(binding: ActivityMainBinding) {
@@ -38,24 +44,19 @@ class MainActivity : AppCompatActivity() {
             null
         })
 
-        lifecycleScope.launch {
-            while (!binding.echarts.check()) {
-                withContext(Dispatchers.IO) {
-                    delay(200)
-                }
-            }
-
+        binding.echarts.runOnChecked {
             binding.echarts.evaluateJavascript(
                 """javascript:
-                // Messenger.postMessage(chart.getWidth());
-                chart.on('click', 'series', (params) => {
+                // Messenger.postMessage(${binding.echarts.jsChartName}.getWidth());
+                ${binding.echarts.jsChartName}.on('click', 'series', (params) => {
                     Messenger.postMessage(JSON.stringify({
                       type: 'showToast',
                       payload: params.data,
                     }));
                 });
+                void(0);
             """.trimIndent()
-            )
+            ) {}
         }
     }
 

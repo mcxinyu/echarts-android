@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="EChartsWebView">
+        <attr name="initUrl" format="string" />
+        <attr name="initScript" format="string" />
+        <attr name="optsScript" format="string" />
+        <attr name="themeScript" format="string" />
+        <attr name="extensionsScript" format="string" />
         <attr name="option" format="string" />
+        <attr name="moreScript" format="string" />
     </declare-styleable>
 </resources>

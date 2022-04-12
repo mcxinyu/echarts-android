@@ -15,22 +15,60 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                style="@style/TextAppearance.Material3.ActionBar.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="echart-android" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_brightness_5_24" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="4dp"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_brightness_2_24" />
+        </LinearLayout>
+
         <com.mcxinyu.echartsandroid.EChartsWebView
             android:id="@+id/echarts"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/textView"
-            app:layout_constraintTop_toTopOf="parent"
-            app:option="@{m}" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            app:option="@{m??``}" />
 
         <TextView
             android:id="@+id/textView"
+            style="@style/TextAppearance.Material3.BodySmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingHorizontal="16dp"
             android:paddingVertical="8dp"
             android:text="Apache ECharts 中并没有单独的瀑布图类型，但是我们可以使用堆叠的柱状图模拟该效果。\n点击柱状图下段透明系列查看模拟值"
-            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
