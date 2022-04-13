@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        binding.echarts.setOption(option)
+        binding.m = option
     }
 
     private fun interactWithJs(binding: ActivityMainBinding) {

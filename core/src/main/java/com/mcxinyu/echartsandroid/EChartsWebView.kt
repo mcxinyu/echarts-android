@@ -45,6 +45,7 @@ open class EChartsWebView @JvmOverloads constructor(
     lateinit var initScript: String
         private set
 
+    @JvmOverloads
     fun setInitScript(value: String, block: ((String) -> Unit)? = null) {
         if (initScript != value) {
             initScript = value
@@ -65,6 +66,7 @@ open class EChartsWebView @JvmOverloads constructor(
      * @param value String
      * @param block Function1<String, Unit>?
      */
+    @JvmOverloads
     fun registerThemeScript(value: String, block: ((String) -> Unit)? = null) {
         if (themeScript != value) {
             themeScript = value
@@ -80,6 +82,7 @@ open class EChartsWebView @JvmOverloads constructor(
      * @param value String
      * @param block Function1<String, Unit>?
      */
+    @JvmOverloads
     fun setThemeName(value: String, block: ((String) -> Unit)? = null) {
         if (themeName != value) {
             themeName = value
@@ -95,6 +98,7 @@ open class EChartsWebView @JvmOverloads constructor(
     lateinit var optsScript: String
         private set
 
+    @JvmOverloads
     fun setOptsScript(value: String, block: ((String) -> Unit)? = null) {
         if (optsScript != value) {
             optsScript = value
@@ -110,6 +114,7 @@ open class EChartsWebView @JvmOverloads constructor(
     var extensionsScript: String? = null
         private set
 
+    @JvmOverloads
     fun setExtensionsScript(value: String, block: ((String) -> Unit)? = null) {
         if (extensionsScript != value) {
             extensionsScript = value
@@ -124,6 +129,7 @@ open class EChartsWebView @JvmOverloads constructor(
     var moreScript: String? = null
         private set
 
+    @JvmOverloads
     fun setMoreScript(value: String, block: ((String) -> Unit)? = null) {
         if (moreScript != value) {
             moreScript = value
@@ -159,6 +165,7 @@ open class EChartsWebView @JvmOverloads constructor(
     var option: String? = null
         private set
 
+    @JvmOverloads
     fun setOption(value: String, block: ((String) -> Unit)? = null) {
         if (option != value) {
             option = value
