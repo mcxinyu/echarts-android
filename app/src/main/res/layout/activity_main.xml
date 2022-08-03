@@ -50,6 +50,7 @@
             android:id="@+id/echarts"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            app:initUrl="file:///android_asset/index_inner.html"
             app:layout_constraintBottom_toTopOf="@+id/textView"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
             app:option="@{m??``}" />
@@ -62,9 +63,39 @@
             android:paddingHorizontal="16dp"
             android:paddingVertical="8dp"
             android:text="Apache ECharts 中并没有单独的瀑布图类型，但是我们可以使用堆叠的柱状图模拟该效果。\n点击柱状图下段透明系列查看模拟值"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayoutBottom"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/echarts" />
+
+        <LinearLayout
+            android:id="@+id/linearLayoutBottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:gravity="center_vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_brightness_5_24"
+                android:text="本地" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchViewLocal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_brightness_5_24"
+                android:text="jsDelivr CDN" />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

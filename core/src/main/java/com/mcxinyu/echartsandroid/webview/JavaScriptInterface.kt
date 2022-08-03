@@ -12,7 +12,7 @@ import android.webkit.JavascriptInterface
  * @constructor
  * @author <a href=mailto:mcxinyu@foxmail.com>yuefeng</a> in 2022/3/24.
  */
-class JavaScriptInterface(val interfaceName: String, val onMessage: (String?) -> String?) {
+class JavaScriptInterface(val interfaceName: String, private val onMessage: (String?) -> String?) {
 
     /**
      * 该方法暴露给 javaScript 调用。
@@ -43,3 +43,5 @@ class JavaScriptInterface(val interfaceName: String, val onMessage: (String?) ->
     @JavascriptInterface
     fun postMessage(message: String?) = onMessage.invoke(message)
 }
+
+data class SampleMessage(val type: String?, val payload: Any?) : java.io.Serializable

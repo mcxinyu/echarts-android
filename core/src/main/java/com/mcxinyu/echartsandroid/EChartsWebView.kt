@@ -19,13 +19,16 @@ import org.intellij.lang.annotations.Language
 open class EChartsWebView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : WebView(context, attrs, defStyleAttr), CoroutineScope by MainScope() {
 
     /**
      * 空时使用默认实现，可以模仿本项目放置在 assets 中，也可以将文件放置在云端。
      * 这里可以设置自己需要的 echarts 版本，详细参考 core/src/main/assets/index.html
      * [参考](https://echarts.apache.org/zh/api.html#echarts.init)
+     *
+     * 1.2.0 已从 [jsDelivr CDN](https://www.jsdelivr.com/package/npm/echarts) 获取 echarts.js。
+     * 目的是减少包体积，为了快速加载建议采用本地内置，权衡在你。
      */
     var initUrl: String = ""
         private set
@@ -42,7 +45,20 @@ open class EChartsWebView @JvmOverloads constructor(
      * [参考](https://echarts.apache.org/zh/api.html#echarts.init)
      */
     @Language("JavaScript")
-    lateinit var initScript: String
+    var initScript: String? = null
+        get() = field ?: """javascript:
+            ${extensionsScript ?: ""}
+            ${themeScript ?: ""}
+            var $jsChartName = echarts.init(
+                document.getElementById('$h5ChartDomId'),
+                ${themeName?.let { "'$themeName'" }},
+                $optsScript
+            );
+            ${moreScript ?: ""}
+            ${if (option == null) "" else "$jsChartName.setOption($option, true);"}
+            window.onresize = function() { $jsChartName.resize(); }
+            void(0);
+            """.trimIndent()
         private set
 
     @JvmOverloads
@@ -191,19 +207,7 @@ open class EChartsWebView @JvmOverloads constructor(
 
             option = getString(R.styleable.EChartsWebView_option)
 
-            initScript = getString(R.styleable.EChartsWebView_initScript) ?: """javascript:
-                ${extensionsScript ?: ""}
-                ${themeScript ?: ""}
-                var $jsChartName = echarts.init(
-                    document.getElementById('$h5ChartDomId'),
-                    ${themeName?.let { "'$themeName'" }},
-                    $optsScript
-                );
-                ${moreScript ?: ""}
-                ${if (option == null) "" else "$jsChartName.setOption($option, true);"}
-                window.onresize = function() { $jsChartName.resize(); }
-                void(0);
-                """.trimIndent()
+            initScript = getString(R.styleable.EChartsWebView_initScript)
 
             initEcharts(url)
         }
@@ -226,7 +230,7 @@ open class EChartsWebView @JvmOverloads constructor(
             client,
             onPageFinished = object : (WebView?, String?) -> Unit {
                 override fun invoke(view: WebView?, url: String?) {
-                    evaluateJavascript(initScript, null)
+                    evaluateJavascript(initScript!!, null)
                 }
             }
         )

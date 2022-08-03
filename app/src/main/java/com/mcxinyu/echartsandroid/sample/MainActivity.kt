@@ -5,8 +5,10 @@ import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import com.google.gson.Gson
 import com.mcxinyu.echartsandroid.sample.databinding.ActivityMainBinding
 import com.mcxinyu.echartsandroid.webview.JavaScriptInterface
+import com.mcxinyu.echartsandroid.webview.SampleMessage
 import com.mcxinyu.echartsandroid.webview.addJavascriptInterface
 import org.intellij.lang.annotations.Language
 
@@ -39,15 +41,34 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        binding.switchViewLocal.setOnCheckedChangeListener { buttonView, isChecked ->
+            binding.echarts.setInitUrl(
+                if (isChecked) "file:///android_asset/index.html"
+                else "file:///android_asset/index_inner.html"
+            )
+            if (isChecked && buttonView.tag != "notified") {
+                buttonView.tag = "notified"
+                Toast.makeText(this@MainActivity, "首次网络加载 echarts.js，可能需要一些时间", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         binding.m = option
     }
 
     private fun interactWithJs(binding: ActivityMainBinding) {
         binding.echarts.addJavascriptInterface(JavaScriptInterface("Messenger") {
-            runOnUiThread {
-                Toast.makeText(this, it ?: "just-call-on-message", Toast.LENGTH_SHORT).show()
+            it?.let {
+                val message = Gson().fromJson(it, SampleMessage::class.java)
+                if (message.type == "showToast") {
+                    runOnUiThread {
+                        Toast.makeText(
+                            this,
+                            message.payload?.toString() ?: "just-call-on-message",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
             }
-
             null
         })
 
