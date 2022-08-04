@@ -31,15 +31,6 @@ suspend inline fun WebView.evaluateJavascript(script: String): String? =
         evaluateJavascript(script) { continuation.resume(it) }
     }
 
-/**
- * 快速与 Web 交互的方法，详见 [JavaScriptInterface]
- *
- * @receiver WebView
- * @param jsInterface JavaScriptInterface
- */
-fun WebView.addJavascriptInterface(jsInterface: JavaScriptInterface) =
-    addJavascriptInterface(jsInterface, jsInterface.interfaceName)
-
 @Suppress("DEPRECATION")
 internal fun careWebViewClient(
     origin: WebViewClient,
