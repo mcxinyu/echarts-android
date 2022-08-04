@@ -75,8 +75,8 @@ class MainActivity : AppCompatActivity() {
         binding.echarts.runOnChecked {
             binding.echarts.evaluateJavascript(
                 """javascript:
-                // Messenger.postMessage(${binding.echarts.jsChartName}.getWidth());
-                ${binding.echarts.jsChartName}.on('click', 'series', (params) => {
+                // Messenger.postMessage(${binding.echarts.echartsInstance}.getWidth());
+                ${binding.echarts.echartsInstance}.on('click', 'series', (params) => {
                     Messenger.postMessage(JSON.stringify({
                       type: 'showToast',
                       payload: params.data,

@@ -49,14 +49,14 @@ open class EChartsWebView @JvmOverloads constructor(
         get() = field ?: """javascript:
             ${extensionsScript ?: ""}
             ${themeScript ?: ""}
-            var $jsChartName = echarts.init(
+            var $echartsInstance = echarts.init(
                 document.getElementById('$h5ChartDomId'),
                 ${themeName?.let { "'$themeName'" }},
                 $optsScript
             );
             ${moreScript ?: ""}
-            ${if (option == null) "" else "$jsChartName.setOption($option, true);"}
-            window.onresize = function() { $jsChartName.resize(); }
+            ${if (option == null) "" else "$echartsInstance.setOption($option, true);"}
+            window.onresize = function() { $echartsInstance.resize(); }
             void(0);
             """.trimIndent()
         private set
@@ -158,21 +158,21 @@ open class EChartsWebView @JvmOverloads constructor(
             evaluateJavascript(
                 """javascript:
                     try {
-                      $jsChartName.dispose();
+                      $echartsInstance.dispose();
                     } catch(e) {}
-                    $jsChartName = echarts.init(
+                    $echartsInstance = echarts.init(
                         document.getElementById('$h5ChartDomId'),
                         ${themeName?.let { "'$themeName'" }},
                         $optsScript
                     );
-                    $jsChartName.setOption($option, true);
+                    $echartsInstance.setOption($option, true);
                 """.trimIndent(),
                 block
             )
         }
     }
 
-    var jsChartName = "chart"
+    var echartsInstance = "chart"
     var h5ChartDomId = "chart"
 
     /**
@@ -188,7 +188,7 @@ open class EChartsWebView @JvmOverloads constructor(
             option?.let {
                 runOnChecked {
                     if (isAttachedToWindow) {
-                        evaluateJavascript("javascript:$jsChartName.setOption($it, true);", block)
+                        evaluateJavascript("javascript:$echartsInstance.setOption($it, true);", block)
                     }
                 }
             }
@@ -255,7 +255,7 @@ open class EChartsWebView @JvmOverloads constructor(
      *
      * @return Boolean
      */
-    suspend fun check() = "null" != evaluateJavascript("javascript:$jsChartName.getWidth();")
+    suspend fun check() = "null" != evaluateJavascript("javascript:$echartsInstance.getWidth();")
 
     /**
      * 检查 chart 是否实例化成功
@@ -263,7 +263,7 @@ open class EChartsWebView @JvmOverloads constructor(
      * @param onResult [@kotlin.ExtensionFunctionType] Function1<Boolean, Unit>
      */
     fun check(onResult: Boolean.() -> Unit) =
-        evaluateJavascript("javascript:$jsChartName.getWidth();") {
+        evaluateJavascript("javascript:$echartsInstance.getWidth();") {
             onResult.invoke("null" != it)
         }
 }
