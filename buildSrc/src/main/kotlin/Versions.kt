@@ -5,6 +5,6 @@
 object Versions {
     const val CORE_LIB_VERSION = "1.2.0"
 
-    const val KOTLIN_VERSION = "1.6.20"
+    const val KOTLIN_VERSION = "1.7.21"
     const val GSON_VERSION = "2.9.0"
 }
