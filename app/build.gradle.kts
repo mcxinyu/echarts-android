@@ -1,5 +1,3 @@
-import Versions.GSON_VERSION
-
 plugins {
     id("com.android.application")
     kotlin("android")
@@ -50,4 +48,5 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
 
     implementation("com.google.code.gson:gson:${Versions.GSON_VERSION}")
+    implementation("com.github.mcxinyu:javascript-interface:1.0.0")
 }

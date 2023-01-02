@@ -7,7 +7,8 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.core.content.withStyledAttributes
 import com.mcxinyu.echartsandroid.webview.careWebViewClient
-import com.mcxinyu.echartsandroid.webview.evaluateJavascript
+import com.mcxinyu.javascriptinterface.evaluate
+import com.mcxinyu.javascriptinterface.evaluateScript
 import kotlinx.coroutines.*
 import org.intellij.lang.annotations.Language
 
@@ -62,7 +63,7 @@ open class EChartsWebView @JvmOverloads constructor(
         private set
 
     @JvmOverloads
-    fun setInitScript(value: String, block: ((String) -> Unit)? = null) {
+    fun setInitScript(value: String, block: ((String?) -> Unit)? = null) {
         if (initScript != value) {
             initScript = value
             refresh(block)
@@ -83,10 +84,10 @@ open class EChartsWebView @JvmOverloads constructor(
      * @param block Function1<String, Unit>?
      */
     @JvmOverloads
-    fun registerThemeScript(value: String, block: ((String) -> Unit)? = null) {
+    fun registerThemeScript(value: String, block: ((String?) -> Unit)? = null) {
         if (themeScript != value) {
             themeScript = value
-            runOnChecked { evaluateJavascript("javascript:$themeScript", block) }
+            runOnChecked { evaluateScript("javascript:$themeScript", block) }
         }
     }
 
@@ -99,7 +100,7 @@ open class EChartsWebView @JvmOverloads constructor(
      * @param block Function1<String, Unit>?
      */
     @JvmOverloads
-    fun setThemeName(value: String, block: ((String) -> Unit)? = null) {
+    fun setThemeName(value: String, block: ((String?) -> Unit)? = null) {
         if (themeName != value) {
             themeName = value
             refresh(block)
@@ -115,7 +116,7 @@ open class EChartsWebView @JvmOverloads constructor(
         private set
 
     @JvmOverloads
-    fun setOptsScript(value: String, block: ((String) -> Unit)? = null) {
+    fun setOptsScript(value: String, block: ((String?) -> Unit)? = null) {
         if (optsScript != value) {
             optsScript = value
             refresh(block)
@@ -131,7 +132,7 @@ open class EChartsWebView @JvmOverloads constructor(
         private set
 
     @JvmOverloads
-    fun setExtensionsScript(value: String, block: ((String) -> Unit)? = null) {
+    fun setExtensionsScript(value: String, block: ((String?) -> Unit)? = null) {
         if (extensionsScript != value) {
             extensionsScript = value
             refresh(block)
@@ -146,16 +147,16 @@ open class EChartsWebView @JvmOverloads constructor(
         private set
 
     @JvmOverloads
-    fun setMoreScript(value: String, block: ((String) -> Unit)? = null) {
+    fun setMoreScript(value: String, block: ((String?) -> Unit)? = null) {
         if (moreScript != value) {
             moreScript = value
             refresh(block)
         }
     }
 
-    private fun refresh(block: ((String) -> Unit)? = null) {
+    private fun refresh(block: ((String?) -> Unit)? = null) {
         runOnChecked {
-            evaluateJavascript(
+            evaluateScript(
                 """javascript:
                     try {
                       $echartsInstance.dispose();
@@ -182,13 +183,13 @@ open class EChartsWebView @JvmOverloads constructor(
         private set
 
     @JvmOverloads
-    fun setOption(value: String, block: ((String) -> Unit)? = null) {
+    fun setOption(value: String, block: ((String?) -> Unit)? = null) {
         if (option != value) {
             option = value
             option?.let {
                 runOnChecked {
                     if (isAttachedToWindow) {
-                        evaluateJavascript("javascript:$echartsInstance.setOption($it, true);", block)
+                        evaluateScript("javascript:$echartsInstance.setOption($it, true);", block)
                     }
                 }
             }
@@ -230,7 +231,7 @@ open class EChartsWebView @JvmOverloads constructor(
             client,
             onPageFinished = object : (WebView?, String?) -> Unit {
                 override fun invoke(view: WebView?, url: String?) {
-                    evaluateJavascript(initScript!!, null)
+                    evaluateScript(initScript!!)
                 }
             }
         )
@@ -255,7 +256,7 @@ open class EChartsWebView @JvmOverloads constructor(
      *
      * @return Boolean
      */
-    suspend fun check() = "null" != evaluateJavascript("javascript:$echartsInstance.getWidth();")
+    suspend fun check() = "null" != evaluate("javascript:$echartsInstance.getWidth();")
 
     /**
      * 检查 chart 是否实例化成功
@@ -263,7 +264,7 @@ open class EChartsWebView @JvmOverloads constructor(
      * @param onResult [@kotlin.ExtensionFunctionType] Function1<Boolean, Unit>
      */
     fun check(onResult: Boolean.() -> Unit) =
-        evaluateJavascript("javascript:$echartsInstance.getWidth();") {
+        evaluateScript("javascript:$echartsInstance.getWidth();") {
             onResult.invoke("null" != it)
         }
 }

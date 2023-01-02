@@ -15,22 +15,6 @@ import kotlin.coroutines.resume
  *
  * @author <a href=mailto:mcxinyu@foxmail.com>yuefeng</a> in 2022/3/24.
  */
-private class WebView
-
-/**
- * 协程版本的 [WebView.evaluateJavascript]
- *
- * 在当前显示页面的上下文中异步运行 JavaScript。
- *
- * @receiver WebView
- * @param script String
- * @return String?
- */
-suspend inline fun WebView.evaluateJavascript(script: String): String? =
-    suspendCancellableCoroutine { continuation ->
-        evaluateJavascript(script) { continuation.resume(it) }
-    }
-
 @Suppress("DEPRECATION")
 internal fun careWebViewClient(
     origin: WebViewClient,

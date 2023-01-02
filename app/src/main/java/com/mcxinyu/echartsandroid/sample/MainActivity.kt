@@ -7,9 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.gson.Gson
 import com.mcxinyu.echartsandroid.sample.databinding.ActivityMainBinding
-import com.mcxinyu.echartsandroid.webview.JavaScriptInterface
-import com.mcxinyu.echartsandroid.webview.SampleMessage
-import com.mcxinyu.echartsandroid.webview.addJavascriptInterface
+import com.mcxinyu.javascriptinterface.JavaScriptInterface
+import com.mcxinyu.javascriptinterface.SampleMessage
+import com.mcxinyu.javascriptinterface.addJavascriptInterface
 import org.intellij.lang.annotations.Language
 
 /**
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         binding.echarts.addJavascriptInterface(JavaScriptInterface("Messenger") {
             it?.let {
                 val message = Gson().fromJson(it, SampleMessage::class.java)
-                if (message.type == "showToast") {
+                if (message.func == "showToast") {
                     runOnUiThread {
                         Toast.makeText(
                             this,
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                 // Messenger.postMessage(${binding.echarts.echartsInstance}.getWidth());
                 ${binding.echarts.echartsInstance}.on('click', 'series', (params) => {
                     Messenger.postMessage(JSON.stringify({
-                      type: 'showToast',
+                      func: 'showToast',
                       payload: params.data,
                     }));
                 });
