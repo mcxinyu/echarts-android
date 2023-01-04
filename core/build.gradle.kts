@@ -61,10 +61,6 @@ dependencies {
     compileOnly("androidx.core:core-ktx:1.7.0")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.KOTLIN_VERSION}")
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
-
-    implementation("com.google.code.gson:gson:${Versions.GSON_VERSION}")
-    implementation("com.github.mcxinyu.javascript-interface:javascript-interface:1.1.1")
+    compileOnly("com.google.code.gson:gson:${Versions.GSON_VERSION}")
+    compileOnly("com.github.mcxinyu.javascript-interface:javascript-interface:1.1.4")
 }
