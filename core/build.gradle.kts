@@ -62,5 +62,5 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.KOTLIN_VERSION}")
 
     compileOnly("com.google.code.gson:gson:${Versions.GSON_VERSION}")
-    compileOnly("com.github.mcxinyu.javascript-interface:javascript-interface:1.1.4")
+    compileOnly("com.github.mcxinyu.javascript-interface:javascript-interface:${Versions.javascript_interface_version}")
 }

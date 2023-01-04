@@ -48,5 +48,5 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
 
     implementation("com.google.code.gson:gson:${Versions.GSON_VERSION}")
-    implementation("com.github.mcxinyu.javascript-interface:javascript-interface:1.1.1")
+    implementation("com.github.mcxinyu.javascript-interface:javascript-interface:${Versions.javascript_interface_version}")
 }
